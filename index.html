@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Report a Question</title>
+        <script src="https://kit.fontawesome.com/9d9b1c2a48.js" crossorigin="anonymous"></script>
+        <!-- Latest compiled and minified CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Latest compiled JavaScript -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    </head>
+
+    <body>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="#">Knowledge Bowl Practice</a>
+              <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="navbar-collapse collapse" id="navbarCollapse">
+                <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                  <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="https://kbpractice.com">Home</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="https://online.kbpractice.com">Multiplayer</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="https://db.kbpractice.com">Access Database</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="https://en.wikipedia.org/wiki/Knowledge_Bowl">Learn more</a>
+                  </li>
+                </ul>
+                <form class="d-flex">
+                  <div class="input-group">
+                      <input type="text" class="form-control" id="searchInputTop" placeholder="Search database" aria-label="Answer question" aria-describedby="basic-addon2">
+                      <div class="input-group-append">
+                        <button class="btn btn-primary" type="button" data-toggle="tooltip" data-placement="top" title="Submit your search term" onclick="location.replace('https://db.kbpractice.com/?q=' + document.getElementById('searchInputTop').value);">Search</button>
+                      </div>
+                  </div>
+                </form>
+                
+              </div>
+            </div>
+          </nav>
+        <div id="full-container" class="container-md pt-5">
+            <h1>Report a Question</h1>
+            <hr>
+            <p>Question: <b id="question"></b></p>
+            <p>Current acceptable answers: <b id="answers"></b></p>
+            <hr>
+            <h3 class="mt-5">What answer(s) should also be acceptable for this question?</h3>
+            <p>Seperate with a comma.</p>
+            <form method="get" action="https://eduria.org/KBAPI/report/">
+                <input type="text" style="display: none;" id="id" name="id">
+                <input type="text" class="form-control" placeholder="Answers" name="proposed">
+                <button type="submit" class="btn btn-primary mt-2">Submit</button>
+            </form>
+        </div>
+    </body>
+    <script>
+        var urlParams = new URLSearchParams(window.location.search);
+        var term = urlParams.get('id');
+        document.getElementById("id").value = term;
+
+        var url = 'https://eduria.org/KBAPI/search/?byid=true&q=' + term;
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+        xhr.send();
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                    results = JSON.parse(this.responseText);
+                    document.getElementById("question").innerText = results[0]["Question"];
+                    document.getElementById("answers").innerText = results[0]["Answer"];
+                }
+            }
+
+    </script>
+</html>
