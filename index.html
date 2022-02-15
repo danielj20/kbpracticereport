@@ -51,7 +51,7 @@
             <p>Current acceptable answers: <b id="answers"></b></p>
             <hr>
             <h3 class="mt-5">What answer(s) should also be acceptable for this question?</h3>
-            <p>Seperate with a comma. If it's more complicated than just adding another acceptable answer ("Name two" or likewise) than simply type an exclamation point and submit and it will be flagged to be looked at in-depth.</p>
+            <p>Seperate with a comma.</p>
             <form method="get" action="https://eduria.org/KBAPI/report/">
                 <input type="text" style="display: none;" id="id" name="id">
                 <input type="text" class="form-control" placeholder="Answers" name="proposed">
@@ -64,17 +64,21 @@
         var term = urlParams.get('id');
         document.getElementById("id").value = term;
 
-        var url = 'https://eduria.org/KBAPI/search/?byid=true&q=' + term;
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", url);
-        xhr.send();
-        xhr.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                    results = JSON.parse(this.responseText);
-                    document.getElementById("question").innerText = results[0]["Question"];
-                    document.getElementById("answers").innerText = results[0]["Answer"];
-                }
-            }
+        if(urlParams.has("success")) {
+          document.getElementById("full-container").innerHTML = "<h1>Success</h1><hr><p>Your report was submitted successfully.</p>";
+        } else {
+          var url = 'https://eduria.org/KBAPI/search/?byid=true&q=' + term;
+          var xhr = new XMLHttpRequest();
+          xhr.open("GET", url);
+          xhr.send();
+          xhr.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+                      results = JSON.parse(this.responseText);
+                      document.getElementById("question").innerText = results[0]["Question"];
+                      document.getElementById("answers").innerText = results[0]["Answer"];
+                  }
+              }
+        }
 
     </script>
 </html>
